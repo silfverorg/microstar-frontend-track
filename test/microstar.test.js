@@ -8,10 +8,10 @@ describe('Microstar track suite', () => {
   var server;
   before(() => {
     server = sinon.fakeServer.create();
-    server.respondWith("POST", "/track", [200, {"Content-Type": "application/json"}, JSON.stringify({status: 200})]);
+    server.autoRespond = true;
 
     const config = {
-      rootPath: '/',
+      rootPath: 'localhost:3000',
       sessionVariables: {
           user_id: 1,
       },
@@ -24,10 +24,13 @@ describe('Microstar track suite', () => {
   });
 
   it('Can peform tracking', (done) => {
+    server.respondWith([200, {"Content-Type": "application/json"}, JSON.stringify({status: 200})]);
     microstar.track('test', {value: 'testvalue'});
+    console.log('requests are', server.requests);
+    server.respond();
       setTimeout(() => {
           done();
-      }, 1000);
+      }, 500);
   });
 
 });

@@ -1,21 +1,26 @@
 var path = require('path');
+var webpack = require('webpack');
 
 module.exports = {
-  entry: "./src/index.js",
+  devtool: 'eval',
+  entry: [
+    './src/index'
+  ],
   output: {
     path: path.join(__dirname, 'lib'),
-    filename: "index.js",
+    filename: 'index.js',
     library: 'microstar',
     libraryTarget: 'commonjs2'
   },
-  target: "node",
+  resolve: {
+    extensions: ['', '.js', '.jsx']
+  },
   module: {
-    loaders: [
-      {
-        test: /\.js$/,
-        exclude: /node_modules/,
-        loader: "babel"
-      }
-    ]
+    loaders: [{
+      test: /\.jsx?$/,
+      loaders: ['babel'],
+      include: path.join(__dirname, 'src')
+    }
+	]
   }
 };

@@ -1,5 +1,4 @@
 import request from 'superagent';
-import path from 'path'
 
 class Microstar {
 
@@ -12,7 +11,7 @@ class Microstar {
 
     track(event, data) {
         const config = this.config;
-        const trackPath = path.join(config.rootPath, 'track')
+        const trackPath = config.rootPath.replace(/\/$/, '') + '/track';
         data.$_session_variables = this.$_session_variables;
 
         const payload = {
