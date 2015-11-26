@@ -1,0 +1,34 @@
+{
+  "name": "microstar",
+  "version": "0.0.1",
+  "description": "Tracking library. Package holds all frontend components.",
+  "main": "./lib/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --config webpack.config.js",
+    "prebuild": "rm -rf lib",
+    "prepublish": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/silfverorg/microstar-frontend-track.git"
+  },
+  "keywords": [
+    "tracking"
+  ],
+  "author": "Viktor Silfverström <viktor@silfverstrom.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/silfverorg/microstar-frontend-track/issues"
+  },
+  "homepage": "https://github.com/silfverorg/microstar-frontend-track#readme",
+  "dependencies": {
+    "superagent": "^1.4.0"
+  },
+  "devDependencies": {
+    "babel": "^6.1.18",
+    "babel-core": "^6.2.1",
+    "babel-loader": "^6.2.0",
+    "webpack": "^1.12.9"
+  }
+}
