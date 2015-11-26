@@ -19,7 +19,6 @@ class Microstar {
             data
         };
 
-        console.log('request', payload, trackPath);
         request
             .post(trackPath)
             .send(payload)
@@ -28,7 +27,6 @@ class Microstar {
                     console.error('Error when performing track', err);
                     return;
                 }
-                console.log('ok');
             });
     }
 };
