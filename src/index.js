@@ -9,14 +9,24 @@ class Microstar {
         this.$_session_variables = _session_var;
     }
 
-    track(event, data) {
+    track(event_name, event_data) {
         const config = this.config;
         const trackPath = config.rootPath.replace(/\/$/, '') + '/track';
-        data.$_session_variables = this.$_session_variables;
+        const screen = window.screen || {};
+        const env = {
+            userAgent: navigator.userAgent,
+            screen: {
+              height: screen.height,
+              width: screen.width,
+              colorDepth: screen.colorDepth,
+            },
+        };
 
         const payload = {
-            event,
-            data
+            event_name,
+            event_data,
+            $_env: env,
+            $_session: this.$_session_variables,
         };
 
         request
