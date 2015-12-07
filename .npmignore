@@ -2,3 +2,5 @@ build
 coverage
 docs
 example
+src
+webpack.config.js
