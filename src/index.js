@@ -11,53 +11,71 @@ function guid() {
 }
 
 class Microstar {
+  init(config) {
+    this.config = config;
 
-    init(config) {
-        this.config = config;
-
-        const _session_var = (config.sessionVariables) ? config.sessionVariables : {};
-        _session_var._session_id = guid();
+    const _session_var = (config.sessionVariables) ? config.sessionVariables : {};
+    const storage = sessionStorage;
+    if (typeof storage !== 'undefined') {
+      this.storage = storage;
+      if (storage && typeof storage.getItem === 'function' && storage.getItem('microstar_id')) {
+        _session_var._session_id = storage.getItem('microstar_id');
+        _session_var._session_event = +(storage.getItem('microstar_session_event')) || 0;
+      } else if(storage && typeof storage.setItem === 'function') {
+        var id = guid();
+        storage.setItem('microstar_id', id);
+        _session_var._session_id = id;
         _session_var._session_event = 0;
-        this.$_session_variables = _session_var;
+      }
+    } else {
+      this.storage = null;
+      _session_var._session_id = guid();
+      _session_var._session_event = 0;
     }
 
-    _increaseSessionEvent() {
-      if (this.$_session_variables && typeof this.$_session_variables._session_event !== 'undefined') {
-        this.$_session_variables._session_event += 1;
+    this.$_session_variables = _session_var;
+  }
+
+  _increaseSessionEvent() {
+    if (this.$_session_variables && typeof this.$_session_variables._session_event !== 'undefined') {
+      this.$_session_variables._session_event += 1;
+      if (this.storage && typeof this.storage.setItem === 'function') {
+        this.storage.setItem('microstar_session_event', this.$_session_variables._session_event);
       }
     }
+  }
 
-    track(event_name, event_data = {}) {
-        const config = this.config;
-        const trackPath = config.rootPath.replace(/\/$/, '') + '/track';
-        const screen = window.screen || {};
-        const env = {
-            userAgent: navigator.userAgent,
-            screen: {
-              height: screen.height,
-              width: screen.width,
-              colorDepth: screen.colorDepth,
-            },
-        };
+  track(event_name, event_data = {}) {
+      const config = this.config;
+      const trackPath = config.server_url.replace(/\/$/, '') + '/track';
+      const screen = window.screen || {};
+      const env = {
+        userAgent: navigator.userAgent,
+        screen: {
+          height: screen.height,
+          width: screen.width,
+          colorDepth: screen.colorDepth,
+        },
+      };
 
-        const payload = {
-            event_name,
-            event_data,
-            _env: env,
-            _session: this.$_session_variables,
-        };
+      const payload = {
+        event_name,
+        event_data,
+        _env: env,
+        _session: this.$_session_variables,
+      };
 
-        request
-            .post(trackPath)
-            .send(payload)
-            .end((err, res) => {
-                if (err) {
-                    console.error('Error when performing track', err);
-                    return;
-                }
-                this._increaseSessionEvent();
-            });
-    }
+      request
+        .post(trackPath)
+        .send(payload)
+        .end((err, res) => {
+          if (err) {
+            console.error('Error when performing track', err);
+            return;
+          }
+          this._increaseSessionEvent();
+        });
+  }
 };
 
 export default new Microstar();

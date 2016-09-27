@@ -11,7 +11,7 @@ describe('Microstar track suite', () => {
     server.autoRespond = true;
 
     const config = {
-      rootPath: 'localhost:3000',
+      server_url: 'localhost:3000',
       sessionVariables: {
           user_id: 1,
       },
