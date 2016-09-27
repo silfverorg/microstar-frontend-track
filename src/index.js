@@ -43,8 +43,8 @@ class Microstar {
         const payload = {
             event_name,
             event_data,
-            $_env: env,
-            $_session: this.$_session_variables,
+            _env: env,
+            _session: this.$_session_variables,
         };
 
         request
