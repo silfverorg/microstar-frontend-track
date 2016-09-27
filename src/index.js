@@ -13,6 +13,7 @@ function guid() {
 class Microstar {
   init(config) {
     this.config = config;
+    if (!config.server_url) return console.error('Invalid server_url provided to Microstar, will not do any tracking');
 
     const _session_var = (config.sessionVariables) ? config.sessionVariables : {};
     const storage = sessionStorage;
@@ -46,35 +47,36 @@ class Microstar {
   }
 
   track(event_name, event_data = {}) {
-      const config = this.config;
-      const trackPath = config.server_url.replace(/\/$/, '') + '/track';
-      const screen = window.screen || {};
-      const env = {
-        userAgent: navigator.userAgent,
-        screen: {
-          height: screen.height,
-          width: screen.width,
-          colorDepth: screen.colorDepth,
-        },
-      };
+    const config = this.config;
+    if (!config.server_url) return;
+    const trackPath = config.server_url.replace(/\/$/, '') + '/track';
+    const screen = window.screen || {};
+    const env = {
+      userAgent: navigator.userAgent,
+      screen: {
+        height: screen.height,
+        width: screen.width,
+        colorDepth: screen.colorDepth,
+      },
+    };
 
-      const payload = {
-        event_name,
-        event_data,
-        _env: env,
-        _session: this.$_session_variables,
-      };
+    const payload = {
+      event_name,
+      event_data,
+      _env: env,
+      _session: this.$_session_variables,
+    };
 
-      request
-        .post(trackPath)
-        .send(payload)
-        .end((err, res) => {
-          if (err) {
-            console.error('Error when performing track', err);
-            return;
-          }
-          this._increaseSessionEvent();
-        });
+    request
+      .post(trackPath)
+      .send(payload)
+      .end((err, res) => {
+        if (err) {
+          console.error('Error when performing track', err);
+          return;
+        }
+        this._increaseSessionEvent();
+      });
   }
 };
 
