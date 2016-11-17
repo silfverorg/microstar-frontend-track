@@ -1,6 +1,6 @@
 {
   "name": "microstar",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "Tracking library. Package holds all frontend components.",
   "main": "./lib/index.js",
   "scripts": {
