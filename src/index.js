@@ -1,4 +1,4 @@
-import request from 'superagent';
+import $ from 'jquery';
 
 function guid() {
   function s4() {
@@ -67,16 +67,17 @@ class Microstar {
       _session: this.$_session_variables,
     };
 
-    request
-      .post(trackPath)
-      .send(payload)
-      .end((err, res) => {
-        if (err) {
-          console.error('Error when performing track', err);
-          return;
-        }
-        this._increaseSessionEvent();
-      });
+    this._increaseSessionEvent();
+    $.ajax({
+      url: trackPath,
+      jsonp: 'callback',
+      contentType: 'application/json; charset=utf-8',
+      dataType: 'jsonp',
+      data: payload,
+      error: function(xhr, status, err) {
+        console.error('Error when performing track', status, err);
+      }
+    });
   }
 };
 
