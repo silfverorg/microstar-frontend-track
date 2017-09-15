@@ -13,7 +13,7 @@ function guid() {
 class Microstar {
   init(config) {
     this.config = config;
-    if (!config.server_url) return console.error('Invalid server_url provided to Microstar, will not do any tracking');
+    if (!config || !config.server_url) return console.error('Invalid server_url provided to Microstar, will not do any tracking');
 
     const _session_var = (config.sessionVariables) ? config.sessionVariables : {};
     const storage = sessionStorage;
@@ -48,7 +48,7 @@ class Microstar {
 
   track(event_name, event_data = {}) {
     const config = this.config;
-    if (!config.server_url) return;
+    if (!config || !config.server_url) return;
     const trackPath = config.server_url.replace(/\/$/, '') + '/track';
     const screen = window.screen || {};
     const env = {
